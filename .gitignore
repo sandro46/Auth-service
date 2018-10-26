@@ -1,0 +1,6 @@
+__pycache__
+env
+.ftpconfig
+.ftpignore
+frontend/node_modules
+frontend/package-lock.json
