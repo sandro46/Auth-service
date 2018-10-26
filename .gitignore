@@ -4,3 +4,4 @@ env
 .ftpignore
 frontend/node_modules
 frontend/package-lock.json
+config.py
