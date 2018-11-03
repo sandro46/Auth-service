@@ -30,6 +30,16 @@ def require_login(api_method):
 
             try:
                 data = jwt.decode(auth_token, secret, algorithms=['HS256'])
+            except jwt.InvalidSignatureError:
+                payload = {}
+                payload['err'] = 'Token Signature Error'
+                print('[err] ', payload['err'] )
+                return jsonify(payload), 401
+            except jwt.DecodeError:
+                payload = {}
+                payload['err'] = 'Token Signature Error'
+                print('[err] ', payload['err'] )
+                return jsonify(payload), 401
             except jwt.ExpiredSignatureError:
                 payload = {}
                 payload['err'] = 'Token Expired'

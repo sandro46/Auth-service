@@ -17,25 +17,29 @@ class authTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         h = bcrypt.hash("testpasswd")
-        user1 = User(id=1, name='testuser', phone='79508765464', password=h)
-        user2 = User(id=2, name='testuser2', phone='79000000000', password=h)
-        db.session.add(user1)
-        db.session.add(user2)
+        user1 = User.query.filter(User.id == 1).first()
+        if not user1:
+            user1 = User(id=1, name='testuser', phone='79508765464', password=h)
+            db.session.add(user1)
+        user2 = User.query.filter(User.id == 2).first()
+        if not user2:
+            user2 = User(id=2, name='testuser2', phone='79000000000', password=h)
+            db.session.add(user2)
         db.session.commit()
         print("==========Starting all the tests.====================")
 
-    @classmethod
-    def tearDownClass(cls):
-        users = User.query.filter(User.id.in_([1,2])).all()
-        for user in users:
-            db.session.delete(user)
-        tokens = Token.query.filter(Token.user_id.in_([1,2])).all()
-        for token in tokens:
-            db.session.delete(token)
-        db.session.commit()
-        users_cnt = User.query.filter(User.id.in_([1,2])).count()
-        tokens_cnt = Token.query.filter(Token.user_id.in_([1,2])).count()
-        print("==========All tests end. Fixture clered====================")
+    # @classmethod
+    # def tearDownClass(cls):
+    #     users = User.query.filter(User.id.in_([1,2])).all()
+    #     for user in users:
+    #         db.session.delete(user)
+    #     tokens = Token.query.filter(Token.user_id.in_([1,2])).all()
+    #     for token in tokens:
+    #         db.session.delete(token)
+    #     db.session.commit()
+    #     users_cnt = User.query.filter(User.id.in_([1,2])).count()
+    #     tokens_cnt = Token.query.filter(Token.user_id.in_([1,2])).count()
+    #     print("==========All tests end. Fixture clered====================")
 
     def test_fixture_is_ok(self):
         users = User.query.filter(User.id.in_([1,2])).all()
