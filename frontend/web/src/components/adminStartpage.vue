@@ -4,12 +4,7 @@
     <!-- <button type="button" v-on:click='groupRows()' name="button">Test</button> -->
      <b-row >
         <b-col cols="2">
-          <b-nav vertical class="w-25">
-            <b-nav-item >Active</b-nav-item>
-            <b-nav-item>Link</b-nav-item>
-            <b-nav-item>Another Link</b-nav-item>
-            <b-nav-item disabled>Disabled</b-nav-item>
-          </b-nav>
+          <LeftMenu />
         </b-col>
         <b-col>
           <h3>Admin Home</h3>
@@ -22,8 +17,14 @@
 </template>
 
 <script>
+
+import LeftMenu from './LeftMenu.vue'
+
 export default {
   name: 'adminStartpage',
+  components: {
+    LeftMenu
+  },
   props: {
     msg: String
   }
