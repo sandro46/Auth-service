@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Admin from './views/Admin.vue'
+import adminStartpage from './components/adminStartpage.vue'
 import Login from './components/login.vue'
 import store from './store'
 
@@ -13,12 +13,22 @@ const router = new Router({
     {
       path: '/',
       name: 'Admin',
-      component: Admin
+      component: adminStartpage
     },
     {
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/user',
+      name: 'User',
+      component: () => import(/* webpackChunkName: "about" */ './components/User.vue')
+    },
+    {
+      path: '/user/:id',
+      name: 'user_profile',
+      component: () => import(/* webpackChunkName: "about" */ './components/UserProfile.vue')
     }
   ]
 })

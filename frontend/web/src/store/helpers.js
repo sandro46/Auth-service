@@ -35,6 +35,7 @@ const helper =
               ret_err = '[ERR] Refresh is failed';
               return {
                 err: ret_err,
+                status: err.request.status,
                 description:  'Вы не авторизованы в системе'
               }
               break;
@@ -42,13 +43,31 @@ const helper =
               ret_err = '[ERR] Bad criditionals for login';
               return {
                 err: ret_err,
+                status: err.request.status,
                 description:  'Неправильное имя пользователя или пароль'
+              }
+              break;
+            case 404:
+              ret_err = '[ERR] Not found';
+              return {
+                err: ret_err,
+                status: err.request.status,
+                description:  'Запрошен несуществующий ресурс'
+              }
+              break;
+            case 500:
+              ret_err = '[ERR] Iternal server error';
+              return {
+                err: ret_err,
+                status: err.request.status,
+                description:  'Внутренняя ошибка сервера'
               }
               break;
             default:
               ret_err = '[ERR] Unknown error';
               return {
                 err: ret_err,
+                status: err.request.status,
                 description:  'Неизвестная ошибка'
               }
           }
@@ -56,7 +75,7 @@ const helper =
         retHandler: (res, commit) =>  {
           if(res.err) {
             console.log(res.err);
-            commit('clearToken')
+            if(res.status == 401) commit('clearToken')
             commit('setErr', res.description)
             return false;
           }
@@ -65,7 +84,7 @@ const helper =
         axios: () => {
           return axios.create({
             baseURL: 'http://localhost:5000/',
-            timeout: 2000
+            timeout: 5000
           });
         }
       }

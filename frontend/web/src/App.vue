@@ -18,7 +18,9 @@
       </b-navbar>
     </div>
     <b-container class="app-row" fluid>
-      <router-view/>
+      <transition  name="fade" mode="out-in">
+        <router-view/>
+      </transition>
     </b-container>
   </div>
 </template>
