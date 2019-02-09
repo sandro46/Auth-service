@@ -43,15 +43,15 @@ class Token(db.Model):
     def __repr__(self):
         return '<User id: {}>'.format(self.id)
 
-class Item(db.Model):
+class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=True)
     name = db.Column(db.CHAR(255)) #название
     code = db.Column(db.CHAR(255)) #Артикул
     price = db.Column(db.REAL()) #Цена
     count = db.Column(db.Integer) #Количество
     image = db.Column(db.CHAR(255)) #изображение
-    measure = db.Column(db.Integer) #Единица измерения
+    measure = db.Column(db.CHAR(255)) #Единица измерения
     ball = db.Column(db.Integer) #баллы
     nds = db.Column(db.Integer) #Ндс
     sale = db.Column(db.CHAR(1)) #дествуют ли скидки
@@ -60,11 +60,10 @@ class Item(db.Model):
     office = db.Column(db.Integer) #Филиал
     desc = db.Column(db.Text) #Описание
     sect = db.Column(db.Integer) #Цех
-    test = db.Column(db.Integer) #Цех
     created = db.Column(db.DateTime, default=datetime.now()) #создание
     modif = db.Column(db.DateTime, default=datetime.now()) #Дата последнего изменения
     __table_args__ = {"schema":"app"}
 
-    """docstring for Item."""
+    """docstring for Product."""
     def __init__(self, *args, **kwargs):
-        super(Item, self).__init__(*args, **kwargs)
+        super(Product, self).__init__(*args, **kwargs)

@@ -6,7 +6,7 @@
           <b-navbar-brand>Admin Tools</b-navbar-brand>
           <b-collapse is-nav id="nav_text_collapse">
               <b-navbar-nav>
-                <b-nav-item href="#"><router-link to="/">adminStartpage</router-link></b-nav-item>
+                <b-nav-item href="#"><router-link to="/">Startpage</router-link></b-nav-item>
                 <!-- <b-nav-item href="#"><router-link to="/">Результаты</router-link></b-nav-item> -->
                 <!-- <b-nav-item href="#"><router-link to="/task-manager">Протокол работы</router-link></b-nav-item> -->
                   <!-- <b-nav-text>Navbar text</b-nav-text> -->

@@ -48,7 +48,7 @@ const mutations = {
     let idx = state.userList.findIndex((el) => { return el.id == data.id})
     state.userList[idx] = data
   },
-  closeDetails(state){
+  closeUserDetails(state){
     if(!state.userList[0]['id']) state.userList.splice(0,1)
     state.userList = state.userList.map((i) => { i['_showDetails'] = false; return i; })
   },

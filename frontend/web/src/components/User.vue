@@ -111,12 +111,12 @@ export default {
       }
     },
     openNewUserDialog(){
-      this.$store.commit('closeDetails')
+      this.$store.commit('closeUserDetails')
       this.$store.commit('newUserDetails')
       this.modifyConteiner = this.users[0]
     },
     setModifyConteiner(row){
-      this.$store.commit('closeDetails')
+      this.$store.commit('closeUserDetails')
       let obj = {}
       for (let key in row.item) {
         obj[key] = row.item[key];
