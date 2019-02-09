@@ -27,12 +27,12 @@ def index(*args, **kwargs):
     if request.method == 'POST':
         formData = json.loads(request.data)
         print('[i][product/:post] Request is ', formData)
-        # formData['ball'] = 0 if formData['ball'] == '' else formData['ball']
+        formData['ball'] = formData['ball'] if formData['ball'] else None
 
         product = Product(\
                             name=formData['name'], code=formData['code'], user_id=kwargs['user_data']['id'],\
                             price=formData['price'], count=formData['count'], measure=formData['measure'], \
-                            ball=int(formData['ball']), nds=formData['nds'], sale=formData['sale'], desc=formData['desc'] \
+                            ball=formData['ball'], nds=formData['nds'], sale=formData['sale'], desc=formData['desc'] \
                         )
         db.session.add(product)
         db.session.commit()
@@ -40,33 +40,43 @@ def index(*args, **kwargs):
         return jsonify({'id': product.id})
     if request.method == 'PUT':
         formData = json.loads(request.data)
-        print('[i][user/:post] Request is ', formData)
-        user = User.query.filter(User.id == formData['id']).update({
-            'name': formData['name'],
-            'phone': formData['phone'],
-            'role_id': formData['role_id']
+        print('[i][Product/:PUT] Request is ', formData)
+        # {'ball': 10, 'cat': None, 'code': '12321g                                                                                                                                                                                                                                           ', 'count': 21, 'created': 'Sat, 09 Feb 2019 21:39:58 GMT', 'desc': '11111', 'id': 20, 'image': None, 'measure': 'dd                                                                                                                                                                                                                                                             ', 'modif': 'Sat, 09 Feb 2019 21:39:58 GMT', 'name': 'Test22223                                                                                                                                                                                                                                                      ', 'nds': 10, 'office': None, 'price': 5555, 'sale': 'Y', 'sect': None, '_showDetails': False}
+
+        product = Product.query.filter(Product.id == formData['id']).update({
+            'ball': formData['ball']  if formData['ball'] else None,
+            'cat': formData['cat']  if formData['cat'] else None,
+            'code': formData['code']  if formData['code'] else None,
+            'desc': formData['desc']  if formData['desc'] else None,
+            'measure': formData['measure']  if formData['measure'] else None,
+            'name': formData['name']  if formData['name'] else None,
+            'nds': formData['nds']  if formData['nds'] else None,
+            'office': formData['office']  if formData['office'] else None,
+            'price': formData['price']  if formData['price'] else None,
+            'sale': formData['sale']  if formData['sale'] else None,
+            'sect': formData['sect']  if formData['sect'] else None
         })
-        print('[i][user/:post] User id is ', user)
+        print('[i][product/:put] User id is ', product)
         db.session.commit()
         return 'OK'
 
 
-@product.route('/<user_id>', methods=['GET', 'DELETE'])
+@product.route('/<id>', methods=['GET', 'DELETE'])
 @cross_origin(origin='*')
 @require_login
-def getUser(*args, **kwargs):
+def getProduct(*args, **kwargs):
     print("[i][getUser] kwargs is ", kwargs)
     if request.method == 'GET':
         users = db.session.query(User.id, User.name, User.phone, User_role.name.label('role_name'), User.role_id)\
             .join(User_role, User_role.id == User.role_id)\
-            .filter(User.id == kwargs['user_id']).first()
+            .filter(User.id == kwargs['id']).first()
         user = sql_to_dict(users)
         print("[i] User query returns is", user)
         return jsonify(user)
     if request.method == 'DELETE':
-        print("[i][user/id:delete] User request returns is ", kwargs['user_id'])
-        res = User.query.filter(User.id == kwargs['user_id']).delete()
-        print("[i][user/id:delete] Deleting query result is ", res)
+        print("[i][PRODUCT/id:delete] PRODUCT request returns is ", kwargs['id'])
+        res = Product.query.filter(Product.id == kwargs['id']).delete()
+        print("[i][PRODUCT/id:delete] Deleting query result is ", res)
         db.session.commit()
         return 'OK'
 

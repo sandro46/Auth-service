@@ -136,7 +136,7 @@
     methods: {
       async delRow(id){
         if(!window.confirm('Вы уверены, что хотите удалить продукт?')) return;
-        let res = await this.$store.dispatch('delUser', id)
+        let res = await this.$store.dispatch('delProduct', id)
         if(!res) {
           window.alert(this.$store.getters.getErrDescrioption)
           return

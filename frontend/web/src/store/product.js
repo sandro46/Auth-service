@@ -53,19 +53,16 @@ const mutations = {
     payload = payload.map((i) => { i['_showDetails'] = false; return i; })
     state.productList = payload
   },
+  delProduct(state, id){
+    let idx = state.productList.findIndex((el) => { return el.id == id})
+    state.productList.splice(idx,1)
+  },
+  modifyProduct(state, payload){
+    let idx = state.productList.findIndex((el) => { return el.id == payload.id})
+    state.productList[idx] = payload
+  },
   addProduct(state, payload){
-    // debugger
-    // let obj = {}
-    // if(state.productList[0]){
-    //   if(state.productList[0]['id'] == ''){
-    //     for (let key in state.productList[0]) {
-    //       obj[key] = '';
-    //     }
-    //     state.productList[0] = obj;
-    //   }
-    // }
     state.productList = state.productList.map((i) => { i['_showDetails'] = false; return i; })
-    // state.productList.unshift(payload)
   },
   closeProductDetails(state){
     // debugger;
@@ -99,12 +96,30 @@ const mutations = {
 }
 
 const actions = {
+  async delProduct({state, commit, rootState}, id){
+    axios.defaults.headers.common['Authorization'] = "Bearer "+rootState.user.login.token;
+    const res = await axios.delete(`product/${id}`).catch(helper.errHandler);
+    if(!res.err) {
+      commit('delProduct', id)
+      return true;
+    }
+    return await helper.retHandler(res, commit);
+  },
   async loadProductList({state, commit, rootState}){
     axios.defaults.headers.common['Authorization'] = "Bearer "+rootState.user.login.token;
     let res = await axios.get('product/').catch(helper.errHandler);
     if(!res.err) {
       // debugger;
       commit('allProducts', res.data)
+      return true;
+    }
+    return await helper.retHandler(res, commit);
+  },
+  async modifyProduct({state, commit, rootState}, payload){
+    axios.defaults.headers.common['Authorization'] = "Bearer "+rootState.user.login.token;
+    const res = await axios.put('product/', payload).catch(helper.errHandler);
+    if(!res.err) {
+      commit('modifyProduct', payload)
       return true;
     }
     return await helper.retHandler(res, commit);
