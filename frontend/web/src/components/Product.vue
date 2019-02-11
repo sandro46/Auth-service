@@ -42,17 +42,21 @@
                         </b-col>
                       </b-row>
                       <b-row>
-                        <b-col md='3'>
+                        <b-col md='2'>
                             <label class="mr-sm-2" :for='modifyConteiner.count'>Кол-во:</label>
                             <b-form-input type="number" v-model='modifyConteiner.count'  ></b-form-input>
                         </b-col>
-                        <b-col md='3'>
+                        <b-col md='2'>
                             <label class="mr-sm-2" :for='modifyConteiner.measure'>Ед. измерения:</label>
                             <b-form-input type="text" v-model='modifyConteiner.measure'  ></b-form-input>
                         </b-col>
-                        <b-col md='3'>
+                        <b-col md='2'>
                             <label class="mr-sm-2" :for='modifyConteiner.ball'>Баллы:</label>
                             <b-form-input type="number" v-model='modifyConteiner.ball'  ></b-form-input>
+                        </b-col>
+                        <b-col md='3'>
+                            <label class="mr-sm-2" :for='modifyConteiner.category'>Категория:</label>
+                            <b-form-select v-model='modifyConteiner.cat' :options="cat_s" class="mb-1" />
                         </b-col>
                         <b-col md='3'>
                             <label class="mr-sm-2" :for='modifyConteiner.sale'>&nbsp;</label>
@@ -88,6 +92,8 @@
                   </b-card>
                 </template>
 
+
+
                 <template slot="actions" slot-scope="row">
                   <b-button-group v-if="row.item.id" size="sm">
                      <b-button size="sm" @click="setModifyConteiner(row)" @click.stop="row.toggleDetails" class="mr-2">
@@ -104,7 +110,10 @@
           </b-row >
         </b-col>
       </b-row>
+
+
   </div>
+
 </template>
 
 <script>
@@ -129,9 +138,11 @@
     },
     computed: {
       items() { return this.$store.getters.productList },
+      cat_s() { return this.$store.getters.prodCatList },
     },
     mounted: async function () {
       await this.$store.dispatch('loadProductList');
+      await this.$store.dispatch('getAllProdCats');
     },
     methods: {
       async delRow(id){

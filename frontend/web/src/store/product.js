@@ -22,10 +22,6 @@ var   productPattern = {
 
 
 const state = {
-  // login: {
-  //   token: localStorage.getItem('token'),
-  //   refreshToken: localStorage.getItem('refreshToken')
-  // },
 
   productList: [
     productPattern

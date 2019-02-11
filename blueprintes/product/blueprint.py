@@ -7,11 +7,10 @@ from flask_cors import CORS, cross_origin
 
 sys.path.append(os.getcwd())
 
-from models import Product
+from models import Product, Prod_cat
 from app import db, to_json, sql_to_dict
 
 product = Blueprint('product', __name__)
-
 
 
 @product.route('/', methods=['GET', 'POST', 'PUT'])
@@ -20,7 +19,7 @@ product = Blueprint('product', __name__)
 def index(*args, **kwargs):
     if request.method == 'GET':
         print('[i] Kwargs is ', kwargs)
-        product = db.session.query(Product.id, Product.name, Product.code, Product.price, Product.count, Product.image, Product.ball, Product.nds, Product.sale, Product.cat,  Product.office, Product.desc, Product.sect, Product.created, Product.modif, Product.measure ).all()
+        product = db.session.query(Product.id, Product.name, Product.code, Product.price, Product.count, Product.image, Product.ball, Product.nds, Product.sale, Product.cat,  Product.office, Product.desc, Product.sect, Product.created, Product.modif, Product.measure, Prod_cat.name.label('category') ).outerjoin(Prod_cat, Prod_cat.id == Product.id).all()
         product = sql_to_dict(product)
         print("[i] Product query returns is", product)
         return jsonify(product)
@@ -32,7 +31,7 @@ def index(*args, **kwargs):
         product = Product(\
                             name=formData['name'], code=formData['code'], user_id=kwargs['user_data']['id'],\
                             price=formData['price'], count=formData['count'], measure=formData['measure'], \
-                            ball=formData['ball'], nds=formData['nds'], sale=formData['sale'], desc=formData['desc'] \
+                            ball=formData['ball'], nds=formData['nds'], cat=formData['cat'], sale=formData['sale'], desc=formData['desc'] \
                         )
         db.session.add(product)
         db.session.commit()
@@ -41,7 +40,6 @@ def index(*args, **kwargs):
     if request.method == 'PUT':
         formData = json.loads(request.data)
         print('[i][Product/:PUT] Request is ', formData)
-        # {'ball': 10, 'cat': None, 'code': '12321g                                                                                                                                                                                                                                           ', 'count': 21, 'created': 'Sat, 09 Feb 2019 21:39:58 GMT', 'desc': '11111', 'id': 20, 'image': None, 'measure': 'dd                                                                                                                                                                                                                                                             ', 'modif': 'Sat, 09 Feb 2019 21:39:58 GMT', 'name': 'Test22223                                                                                                                                                                                                                                                      ', 'nds': 10, 'office': None, 'price': 5555, 'sale': 'Y', 'sect': None, '_showDetails': False}
 
         product = Product.query.filter(Product.id == formData['id']).update({
             'ball': formData['ball']  if formData['ball'] else None,
