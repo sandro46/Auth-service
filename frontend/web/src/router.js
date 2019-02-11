@@ -34,11 +34,6 @@ const router = new Router({
       path: '/product',
       name: 'product',
       component: () => import(/* webpackChunkName: "about" */ './components/Product.vue')
-    },
-    {
-      path: '/prod-cat',
-      name: 'prod-cat',
-      component: () => import(/* webpackChunkName: "about" */ './components/ProdCat.vue')
     }
   ]
 })

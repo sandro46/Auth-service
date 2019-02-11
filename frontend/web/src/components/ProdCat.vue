@@ -3,10 +3,10 @@
   <div class="main_wrap">
 
      <b-row >
-        <b-col cols="2">
+        <!-- <b-col cols="2">
           <LeftMenu />
-        </b-col>
-        <b-col md="10">
+        </b-col> -->
+        <b-col md="12">
           <h3>Категории продуктов</h3>
           <b-row >
             <b-col>

@@ -17,7 +17,10 @@
 
                  <template slot="HEAD_actions" slot-scope="data">
                    <!-- A custom formatted header cell for field 'name' -->
-                   <b-button type="submit" @click="openNewDialog" variant="success">+</b-button>
+                   <b-button-group>
+                     <b-button size="sm" type="submit" @click="openNewDialog" variant="success">+Продукт</b-button>
+                     <b-button size="sm" type="submit" @click="showModalProdCat=true" variant="success">Категории</b-button>
+                   </b-button-group>
                  </template>
 
                  <template slot="row-details" slot-scope="row">
@@ -96,10 +99,10 @@
 
                 <template slot="actions" slot-scope="row">
                   <b-button-group v-if="row.item.id" size="sm">
-                     <b-button size="sm" @click="setModifyConteiner(row)" @click.stop="row.toggleDetails" class="mr-2">
+                     <b-button size="sm" @click="setModifyConteiner(row)" @click.stop="row.toggleDetails" >
                       Изменить
                      </b-button>
-                     <b-button size="sm" @click="delRow(row.item.id)"  class="mr-2">
+                     <b-button size="sm" @click="delRow(row.item.id)">
                       Удалить
                      </b-button>
                   </b-button-group>
@@ -111,6 +114,19 @@
         </b-col>
       </b-row>
 
+      <b-modal v-model="showModalProdCat"
+         title="Категории продукта"
+         size="lg">
+         <b-container fluid>
+           <prodCat />
+         </b-container>
+        <div slot="modal-footer" class="w-100">
+            <b-btn size="sm" class="float-right" variant="primary" @click="showModalProdCat=false">
+              Закрыть
+            </b-btn>
+        </div>
+      </b-modal>
+
 
   </div>
 
@@ -119,11 +135,13 @@
 <script>
 
   import LeftMenu from './LeftMenu.vue'
+  import ProdCat from './ProdCat.vue'
 
   export default {
     name: 'Product',
     components: {
-      LeftMenu
+      LeftMenu,
+      ProdCat
     },
     data () {
       return {
@@ -134,6 +152,7 @@
           {key: 'actions', label: 'Действия'}
         ],
         modifyConteiner: {},
+        showModalProdCat: false,
       }
     },
     computed: {
