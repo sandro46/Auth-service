@@ -3,11 +3,8 @@
   <div class="main_wrap">
 
      <b-row >
-        <!-- <b-col cols="2">
-          <LeftMenu />
-        </b-col> -->
         <b-col md="12">
-          <h3>Категории продуктов</h3>
+          <!-- <h3>Категории продуктов</h3> -->
           <b-row >
             <b-col>
               <b-table
@@ -67,13 +64,8 @@
 
 <script>
 
-  import LeftMenu from './LeftMenu.vue'
-
   export default {
     name: 'ProdCat',
-    components: {
-      LeftMenu
-    },
     data () {
       return {
         fields: [

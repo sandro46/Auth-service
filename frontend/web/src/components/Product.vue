@@ -20,6 +20,7 @@
                    <b-button-group>
                      <b-button size="sm" type="submit" @click="openNewDialog" variant="success">+Продукт</b-button>
                      <b-button size="sm" type="submit" @click="showModalProdCat=true" variant="success">Категории</b-button>
+                     <b-button size="sm" type="submit" @click="showModalProdComponent=true" variant="success">Компоненты</b-button>
                    </b-button-group>
                  </template>
 
@@ -37,17 +38,17 @@
                         </b-col>
                         <b-col md='3'>
                             <label class="mr-sm-2" :for='modifyConteiner.price'>Цена:</label>
-                            <b-form-input type="number" v-model="modifyConteiner.price"   />
+                            <b-form-input type="text" v-model="modifyConteiner.price"   />
                         </b-col>
                         <b-col md='3'>
                             <label class="mr-sm-2" :for='modifyConteiner.nds'>НДС:</label>
-                            <b-form-input type="number" v-model="modifyConteiner.nds"   />
+                            <b-form-input type="text" v-model="modifyConteiner.nds"   />
                         </b-col>
                       </b-row>
                       <b-row>
                         <b-col md='2'>
                             <label class="mr-sm-2" :for='modifyConteiner.count'>Кол-во:</label>
-                            <b-form-input type="number" v-model='modifyConteiner.count'  ></b-form-input>
+                            <b-form-input type="text" v-model='modifyConteiner.count'  ></b-form-input>
                         </b-col>
                         <b-col md='2'>
                             <label class="mr-sm-2" :for='modifyConteiner.measure'>Ед. измерения:</label>
@@ -55,7 +56,7 @@
                         </b-col>
                         <b-col md='2'>
                             <label class="mr-sm-2" :for='modifyConteiner.ball'>Баллы:</label>
-                            <b-form-input type="number" v-model='modifyConteiner.ball'  ></b-form-input>
+                            <b-form-input type="text" v-model='modifyConteiner.ball'  ></b-form-input>
                         </b-col>
                         <b-col md='3'>
                             <label class="mr-sm-2" :for='modifyConteiner.category'>Категория:</label>
@@ -127,6 +128,22 @@
         </div>
       </b-modal>
 
+      <b-modal v-model="showModalProdComponent"
+         title="Компоненты"
+         size="lg"
+         no-close-on-backdrop
+         >
+         <b-container fluid>
+           <ProdComponent />
+           <!-- <Test /> -->
+         </b-container>
+        <div slot="modal-footer" class="w-100">
+            <b-btn size="sm" class="float-right" variant="primary" @click="showModalProdComponent=false">
+              Закрыть
+            </b-btn>
+        </div>
+      </b-modal>
+
 
   </div>
 
@@ -136,12 +153,16 @@
 
   import LeftMenu from './LeftMenu.vue'
   import ProdCat from './ProdCat.vue'
+  import ProdComponent from './ProdComponent.vue'
+  import Test from './Test.vue'
 
   export default {
     name: 'Product',
     components: {
       LeftMenu,
-      ProdCat
+      ProdCat,
+      ProdComponent,
+      Test,
     },
     data () {
       return {
@@ -153,6 +174,7 @@
         ],
         modifyConteiner: {},
         showModalProdCat: false,
+        showModalProdComponent: false,
       }
     },
     computed: {

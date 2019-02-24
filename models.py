@@ -72,9 +72,32 @@ class Product(db.Model):
 class Prod_cat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255)) #название
+    desc = db.Column(db.Text) #Описание
     created = db.Column(db.DateTime, default=datetime.now()) #создание
     __table_args__ = {"schema":"app"}
 
     """docstring for Prod_cat."""
     def __init__(self, *args, **kwargs):
         super(Prod_cat, self).__init__(*args, **kwargs)
+
+class Prod_component(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255)) #название
+    desc = db.Column(db.Text) #Описание
+    created = db.Column(db.DateTime, default=datetime.now()) #создание
+    __table_args__ = {"schema":"app"}
+
+    """docstring for Prod_cat."""
+    def __init__(self, *args, **kwargs):
+        super(Prod_component, self).__init__(*args, **kwargs)
+
+class Prod_component_rel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer)
+    component_id = db.Column(db.Integer)
+    created = db.Column(db.DateTime, default=datetime.now()) #создание
+    __table_args__ = {"schema":"app"}
+
+    """docstring for Prod_cat."""
+    def __init__(self, *args, **kwargs):
+        super(Prod_component_rel, self).__init__(*args, **kwargs)

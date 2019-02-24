@@ -67,4 +67,7 @@
 .navbar-wrap{
   margin-bottom: 10px;
 }
+.hidden{
+  display: none;
+}
 </style>

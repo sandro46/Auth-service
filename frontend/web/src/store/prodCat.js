@@ -33,10 +33,10 @@ const mutations = {
     state.prodCatList = state.prodCatList.map((i) => { i['_showDetails'] = false; return i; })
   },
   modifyProdCat(state, payload){
-    let idx = state.prodCatList.findIndex((el) => { return el.id == payload.id})
+    let idx = state.prodCatList.findIndex((el) => { return el.value == payload.value})
     state.prodCatList[idx] = payload
   },
-  closeProdCatDetails(){
+  closeProdCatDetails(state){
     let obj = {}
     if(state.prodCatList[0]){
       if(state.prodCatList[0]['id'] == ''){
@@ -52,7 +52,7 @@ const mutations = {
     let idx = state.prodCatList.findIndex((el) => { return el.id == id})
     state.prodCatList.splice(idx,1)
   },
-  newProdCatDetails(){
+  newProdCatDetails(state){
     if(state.prodCatList[0]){
       if( state.prodCatList[0]['id'] == ''){
         state.prodCatList[0]['_showDetails'] = true;
