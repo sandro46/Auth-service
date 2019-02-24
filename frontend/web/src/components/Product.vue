@@ -74,6 +74,22 @@
                         </b-col>
                       </b-row>
                       <b-row>
+                        <b-col>
+                          <b-form-group label="Компоненты, входящие в состав: ">
+                            <b-form-checkbox
+                              v-for="option in prod_components"
+                              v-model="modifyConteiner.components_list"
+                              :key="option.value"
+                              :value="option.value"
+                              name="flavour4"
+                              inline
+                            >
+                              {{ option.text }}
+                            </b-form-checkbox>
+                          </b-form-group>
+                        </b-col>
+                      </b-row>
+                      <b-row>
                         <b-col md='12'>
                           <label class="mr-sm-2" :for='modifyConteiner.desc'>Описание:</label>
                           <b-form-textarea id="textarea1"
@@ -83,6 +99,7 @@
                           </b-form-textarea>
                         </b-col>
                       </b-row>
+
                       <b-row>
                         <b-col md='12'>
                             <label class="mr-sm-2" :for='modifyConteiner.id'>&nbsp;</label>
@@ -166,6 +183,7 @@
     },
     data () {
       return {
+        prod_components_checked: [1],
         fields: [
           {key: 'name', label: 'Имя'},
           {key: 'code', lable: 'Code'},
@@ -180,6 +198,7 @@
     computed: {
       items() { return this.$store.getters.productList },
       cat_s() { return this.$store.getters.prodCatList },
+      prod_components() { return this.$store.getters.prodComponentList },
     },
     mounted: async function () {
       await this.$store.dispatch('loadProductList');
@@ -215,7 +234,7 @@
         this.$store.commit('closeProductDetails')
         let obj = {}
         for (let key in row.item) {
-          obj[key] = row.item[key];
+          obj[key] = key.indexOf('_list') === -1 ? String(row.item[key]) : row.item[key];
         }
         this.modifyConteiner = obj
       },

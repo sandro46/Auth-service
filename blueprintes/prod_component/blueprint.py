@@ -7,7 +7,7 @@ from flask_cors import CORS, cross_origin
 
 sys.path.append(os.getcwd())
 
-from models import Prod_component
+from models import Prod_component, Prod_component_rel
 from app import db, to_json, sql_to_dict
 
 prod_component = Blueprint('prod_component', __name__)
@@ -51,10 +51,8 @@ def delProdComponent(*args, **kwargs):
     if request.method == 'DELETE':
         print("[i][Prod_component/id:delete] Prod_component request returns is ", kwargs['id'])
         res = Prod_component.query.filter(Prod_component.id == kwargs['id']).delete()
-        print("[i][Prod_component/id:delete] Deleting query result is ", res)
+        print("[i][Prod_component/id:delete] Deleting Prod_component query result is ", res)
+        res = Prod_component_rel.query.filter(Prod_component_rel.component_id == kwargs['id']).delete()
+        print("[i][Prod_component/id:delete] Deleting Prod_component_rel query result is ", res)
         db.session.commit()
         return 'OK'
-
-
-
-        

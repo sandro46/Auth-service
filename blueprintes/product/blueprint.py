@@ -7,7 +7,7 @@ from flask_cors import CORS, cross_origin
 
 sys.path.append(os.getcwd())
 
-from models import Product, Prod_cat
+from models import Product, Prod_cat, Prod_component_rel
 from app import db, to_json, sql_to_dict
 
 product = Blueprint('product', __name__)
@@ -19,19 +19,38 @@ product = Blueprint('product', __name__)
 def index(*args, **kwargs):
     if request.method == 'GET':
         print('[i] Kwargs is ', kwargs)
-        product = db.session.query(Product.id, Product.name, Product.code, Product.price, Product.count, Product.image, Product.ball, Product.nds, Product.sale, Product.cat,  Product.office, Product.desc, Product.sect, Product.created, Product.modif, Product.measure, Prod_cat.name.label('category') ).outerjoin(Prod_cat, Prod_cat.id == Product.id).all()
-        product = sql_to_dict(product)
+        product = db.session.execute('''
+            	SELECT
+            		p.*,
+            		cat.name category,
+            		to_char(p.created, 'dd.mm.yyyy') created,
+            		to_char(p.modif, 'dd.mm.yyyy') modif,
+            		prod_comp.list components_list
+            	FROM app.product p
+            	left join app.prod_cat cat ON cat.id=p.cat
+            	left join (
+            		SELECT
+            			 cr.product_id,
+            			array_agg(cr.component_id) list
+            		from app.prod_component_rel cr
+            		group by cr.product_id
+            	) prod_comp ON prod_comp.product_id=p.id
+        ''')
+        product = json.dumps([dict(row) for row in product])
         print("[i] Product query returns is", product)
-        return jsonify(product)
+        return jsonify(json.loads(product))
     if request.method == 'POST':
         formData = json.loads(request.data)
         print('[i][product/:post] Request is ', formData)
         formData['ball'] = formData['ball'] if formData['ball'] else None
+        formData['nds'] = formData['nds'] if formData['nds'] else None
+        formData['office'] = formData['office'] if formData['office'] else None
 
         product = Product(\
                             name=formData['name'], code=formData['code'], user_id=kwargs['user_data']['id'],\
                             price=formData['price'], count=formData['count'], measure=formData['measure'], \
-                            ball=formData['ball'], nds=formData['nds'], cat=formData['cat'], sale=formData['sale'], desc=formData['desc'] \
+                            ball=formData['ball'], nds=formData['nds'], cat=formData['cat'], \
+                            sale=formData['sale'], desc=formData['desc'] \
                         )
         db.session.add(product)
         db.session.commit()
@@ -41,18 +60,30 @@ def index(*args, **kwargs):
         formData = json.loads(request.data)
         print('[i][Product/:PUT] Request is ', formData)
 
+        # if(formData['components_list']):
+
+        if(formData['components_list']):
+            print('[i][Product/:PUT] Product_list is ', formData['components_list'])
+            print('[i][Product/:PUT] Insert Product_list begin ')
+            res = Prod_component_rel.query.filter(Prod_component_rel.product_id == formData['id']).delete()
+            for e in formData['components_list']:
+                component_rel = Prod_component_rel(product_id=formData['id'], component_id=e)
+                db.session.add(component_rel)
+            print('[i][Product/:PUT] Insert Product_list end ')
+
         product = Product.query.filter(Product.id == formData['id']).update({
             'ball': formData['ball']  if formData['ball'] else None,
             'cat': formData['cat']  if formData['cat'] else None,
             'code': formData['code']  if formData['code'] else None,
             'desc': formData['desc']  if formData['desc'] else None,
+            'count': formData['count']  if formData['count'] else None,
             'measure': formData['measure']  if formData['measure'] else None,
             'name': formData['name']  if formData['name'] else None,
             'nds': formData['nds']  if formData['nds'] else None,
-            'office': formData['office']  if formData['office'] else None,
+            'office': formData['office'] if formData['office'] and formData['office'] != 'null' else None,
             'price': formData['price']  if formData['price'] else None,
             'sale': formData['sale']  if formData['sale'] else None,
-            'sect': formData['sect']  if formData['sect'] else None
+            'sect': formData['sect']  if formData['sect'] and formData['sect'] != 'null' else None
         })
         print('[i][product/:put] User id is ', product)
         db.session.commit()

@@ -89,7 +89,7 @@ const actions = {
     }
     return await helper.retHandler(res, commit);
   },
-  async delProdComponent(state, id){
+  async delProdComponent({state, commit, rootState}, id){
     axios.defaults.headers.common['Authorization'] = "Bearer "+rootState.user.login.token;
     const res = await axios.delete(`prod_component/${id}`).catch(helper.errHandler);
     if(!res.err) {
