@@ -55,7 +55,7 @@ const actions = {
       return true;
     }
     return await helper.retHandler(res, commit);
-  }
+  },
   async addProdSect({state, commit, rootState}, payload){
     axios.defaults.headers.common['Authorization'] = "Bearer "+rootState.user.login.token;
     let res = await axios.post('prod_section/', payload).catch(helper.errHandler);
