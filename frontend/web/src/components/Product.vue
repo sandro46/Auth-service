@@ -183,7 +183,7 @@
     },
     data () {
       return {
-        prod_components_checked: [1],
+        prod_components_checked: [],
         fields: [
           {key: 'name', label: 'Имя'},
           {key: 'code', lable: 'Code'},
@@ -234,7 +234,9 @@
         this.$store.commit('closeProductDetails')
         let obj = {}
         for (let key in row.item) {
-          obj[key] = key.indexOf('_list') === -1 ? String(row.item[key]) : row.item[key];
+          obj[key] = key.indexOf('_list') === -1 && row.item[key] ? String(row.item[key]) : row.item[key];
+          // debugger;
+          // obj[key] = obj[key] ? obj[key] : ''
         }
         this.modifyConteiner = obj
       },

@@ -34,6 +34,16 @@ const router = new Router({
       path: '/product',
       name: 'product',
       component: () => import(/* webpackChunkName: "about" */ './components/Product.vue')
+    },
+    {
+      path: '/office',
+      name: 'office',
+      component: () => import(/* webpackChunkName: "about" */ './components/Office.vue')
+    },
+    {
+      path: '/prod-section',
+      name: 'prod_section',
+      component: () => import(/* webpackChunkName: "about" */ './components/ProdSection.vue')
     }
   ]
 })

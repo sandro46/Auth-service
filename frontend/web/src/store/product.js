@@ -8,16 +8,6 @@ const axios = helper.axios()
 
 var   productPattern = {
                     _showDetails: false,
-                    id: '',
-                    name: '',
-                    // code: '',
-                    // price: 0,
-                    count: '',
-                    // measure: '',
-                    // ball: '',
-                    // nds: '',
-                    // sale: '',
-                    desc: '',
 };
 
 
@@ -25,11 +15,6 @@ const state = {
 
   productList: [
     productPattern
-  ],
-  categories: [
-    {name: 'Category1', desc: 'Cat1'},
-    {name: 'Category2', desc: 'Cat2'},
-    {name: 'Category3', desc: 'Cat3'},
   ],
   err: ''
 }

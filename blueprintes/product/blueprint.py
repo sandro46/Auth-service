@@ -25,7 +25,7 @@ def index(*args, **kwargs):
             		cat.name category,
             		to_char(p.created, 'dd.mm.yyyy') created,
             		to_char(p.modif, 'dd.mm.yyyy') modif,
-            		prod_comp.list components_list
+            		coalesce(prod_comp.list, '{}') components_list
             	FROM app.product p
             	left join app.prod_cat cat ON cat.id=p.cat
             	left join (
@@ -42,15 +42,19 @@ def index(*args, **kwargs):
     if request.method == 'POST':
         formData = json.loads(request.data)
         print('[i][product/:post] Request is ', formData)
-        formData['ball'] = formData['ball'] if formData['ball'] else None
-        formData['nds'] = formData['nds'] if formData['nds'] else None
-        formData['office'] = formData['office'] if formData['office'] else None
 
         product = Product(\
-                            name=formData['name'], code=formData['code'], user_id=kwargs['user_data']['id'],\
-                            price=formData['price'], count=formData['count'], measure=formData['measure'], \
-                            ball=formData['ball'], nds=formData['nds'], cat=formData['cat'], \
-                            sale=formData['sale'], desc=formData['desc'] \
+                            name=formData['name'], \
+                            code=formData['code'], \
+                            user_id=kwargs['user_data']['id'],\
+                            price=formData['price'] if formData['price'] else None, \
+                            count=formData['count'] if formData['count'] else None, \
+                            measure=formData['measure'] if formData['measure'] else None, \
+                            ball=formData['ball'] if formData['ball'] else None, \
+                            nds=formData['nds'] if formData['nds'] else None, \
+                            cat=formData['cat'] if formData['cat'] else None, \
+                            sale=formData['sale'] if formData['sale'] else None, \
+                            desc=formData['desc']  if formData['desc'] else None,\
                         )
         db.session.add(product)
         db.session.commit()

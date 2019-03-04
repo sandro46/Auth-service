@@ -101,3 +101,27 @@ class Prod_component_rel(db.Model):
     """docstring for Prod_cat."""
     def __init__(self, *args, **kwargs):
         super(Prod_component_rel, self).__init__(*args, **kwargs)
+
+class Prod_section(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    office_id = db.Column(db.Integer)
+    created = db.Column(db.DateTime, default=datetime.now()) #создание
+    __table_args__ = {"schema":"app"}
+
+    """docstring for Prod_section."""
+    def __init__(self, *args, **kwargs):
+        super(Prod_section, self).__init__(*args, **kwargs)
+
+
+class Office(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    address = db.Column(db.String(255))
+    desc = db.Column(db.Text)
+    created = db.Column(db.DateTime, default=datetime.now()) #создание
+    __table_args__ = {"schema":"app"}
+
+    """docstring for Office."""
+    def __init__(self, *args, **kwargs):
+        super(Office, self).__init__(*args, **kwargs)
