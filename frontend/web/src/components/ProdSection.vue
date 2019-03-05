@@ -48,6 +48,17 @@
                    </b-card>
                 </template>
 
+                <template slot="actions" slot-scope="row">
+                  <b-button-group v-if="row.item.value" size="sm">
+                     <b-button size="sm" @click="setModifyConteiner(row)" @click.stop="row.toggleDetails" >
+                      Изменить
+                     </b-button>
+                     <b-button size="sm" @click="delRow(row.item.value)">
+                      Удалить
+                     </b-button>
+                  </b-button-group>
+                </template>
+
               </b-table>
            </b-col>
          </b-row>
@@ -71,7 +82,7 @@
       return {
         fields: [
           {key: 'text', label: 'Имя'},
-          {key: 'office_id', lable: 'Филиал'},
+          {key: 'office', lable: 'Филиал'},
           {key: 'actions', label: 'Действия'}
         ],
         modifyConteiner: {},
@@ -83,8 +94,17 @@
     },
     mounted: async function () {
       await this.$store.dispatch('loadProdSectList');
+      await this.$store.dispatch('loadOfficeList');
     },
     methods: {
+      setModifyConteiner(row){
+        this.$store.commit('closeProdSectDetails')
+        let obj = {}
+        for (let key in row.item) {
+          obj[key] = row.item[key];
+        }
+        this.modifyConteiner = obj
+      },
       openNewDialog(){
         this.$store.commit('newProdSectDetails')
         this.modifyConteiner = this.items[0]
@@ -92,7 +112,15 @@
       closeNewDialog(){
         this.modifyConteiner = {}
         this.items[0]['_showDetails'] = false
-        this.$store.commit('closeProdSect')
+        this.$store.commit('closeProdSectDetails')
+      },
+      async delRow(id){
+        if(!window.confirm('Вы уверены, что хотите удалить объект?')) return;
+        let res = await this.$store.dispatch('delProdSect', id)
+        if(!res) {
+          window.alert(this.$store.getters.getErrDescrioption)
+          return
+        }
       },
       async onSubmit(evt){
         evt.preventDefault();

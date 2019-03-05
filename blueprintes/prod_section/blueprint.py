@@ -7,7 +7,7 @@ from flask_cors import CORS, cross_origin
 
 sys.path.append(os.getcwd())
 
-from models import Prod_section as Model
+from models import Prod_section as Model, Office
 from app import db, to_json, sql_to_dict
 
 bpName = 'Prod_section'
@@ -21,9 +21,10 @@ bp = Blueprint(bpName, __name__)
 def index(*args, **kwargs):
     if request.method == 'GET':
         print('[i] Kwargs is ', kwargs)
-        res = db.session.query( \
-            Model.id.label('value'), Model.name.label('text') \
-        ).order_by("value desc").all()
+
+        res = db.session.query( Model.id.label('value'), Model.name.label('text'), Office.name.label('office'), Model.office_id)\
+                .join(Office, Office.id == Model.office_id)  \
+                .order_by("value desc").all()
         res = sql_to_dict(res)
         print("[i] {} query returns is ".format(bpName), res)
         return jsonify(res)
@@ -41,8 +42,7 @@ def index(*args, **kwargs):
 
         res = Model.query.filter(Model.id == formData['value']).update({
             'name': formData['text'],
-            'address': formData['address'],
-            'desc': formData['desc'],
+            'office_id': formData['office_id']
         })
         print('[i][{}/:PUT] User id is '.format(bpName), res)
         db.session.commit()
