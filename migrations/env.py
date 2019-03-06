@@ -3,10 +3,14 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
 import logging
+import sys
+
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
+
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -70,9 +74,13 @@ def run_migrations_online():
                                 poolclass=pool.NullPool)
 
     connection = engine.connect()
+    # print('============================================', connection)
+    # sys.exit();
     context.configure(connection=connection,
                       target_metadata=target_metadata,
                       process_revision_directives=process_revision_directives,
+                      include_schemas=True,
+                      version_table_schema='app',
                       **current_app.extensions['migrate'].configure_args)
 
     try:

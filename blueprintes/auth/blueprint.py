@@ -4,6 +4,7 @@ import jwt, sys, os, uuid
 from passlib.hash import bcrypt
 from config import Configurator as config
 from middlewares.require_login import require_login
+from flask_cors import CORS, cross_origin
 
 sys.path.append(os.getcwd())
 
@@ -23,6 +24,7 @@ def releaseTokens(user_id):
     return ret
 
 @auth.route('/', methods=['POST', 'GET'])
+@cross_origin(origin='*')
 def index():
     if request.method == 'GET':
         return 'OK'
@@ -30,11 +32,17 @@ def index():
         payload = {}
         payload['err'] = ''
         req = request.json
+        print('[i] Req is ', req)
 
         user = User.query.filter(User.name == req['login']).first()
+        if not user:
+            payload['err'] = 'Bad Creditionals'
+            print(payload['err'])
+            return jsonify(payload), 403
+
         user.password = user.password.rstrip()
 
-        if not bcrypt.verify(req['passwd'], user.password) or not user:
+        if not bcrypt.verify(req['password'], user.password) or not user:
             payload['err'] = 'Bad Creditionals'
             print(payload['err'])
             return jsonify(payload), 403
@@ -45,6 +53,7 @@ def index():
         return jsonify(payload), 200
 
 @auth.route('/refresh', methods=['POST'])
+@cross_origin(origin='*')
 def refresh_token():
     if request.method == 'POST':
         payload = {}
@@ -66,6 +75,7 @@ def refresh_token():
         return jsonify(payload), 200
 
 @auth.route('/logout', methods=['POST'])
+@cross_origin(origin='*')
 @require_login
 def logout(*args, **kwargs):
     print('[i] user data is ', kwargs['user_data'])

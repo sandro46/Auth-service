@@ -17,25 +17,29 @@ class authTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         h = bcrypt.hash("testpasswd")
-        user1 = User(id=1, name='testuser', phone='79508765464', password=h)
-        user2 = User(id=2, name='testuser2', phone='79000000000', password=h)
-        db.session.add(user1)
-        db.session.add(user2)
+        user1 = User.query.filter(User.id == 1).first()
+        if not user1:
+            user1 = User(id=1, name='testuser', phone='79508765464', password=h, role_id=1)
+            db.session.add(user1)
+        user2 = User.query.filter(User.id == 2).first()
+        if not user2:
+            user2 = User(id=2, name='testuser2', phone='79000000000', password=h, role_id=2)
+            db.session.add(user2)
         db.session.commit()
         print("==========Starting all the tests.====================")
 
-    @classmethod
-    def tearDownClass(cls):
-        users = User.query.filter(User.id.in_([1,2])).all()
-        for user in users:
-            db.session.delete(user)
-        tokens = Token.query.filter(Token.user_id.in_([1,2])).all()
-        for token in tokens:
-            db.session.delete(token)
-        db.session.commit()
-        users_cnt = User.query.filter(User.id.in_([1,2])).count()
-        tokens_cnt = Token.query.filter(Token.user_id.in_([1,2])).count()
-        print("==========All tests end. Fixture clered====================")
+    # @classmethod
+    # def tearDownClass(cls):
+    #     users = User.query.filter(User.id.in_([1,2])).all()
+    #     for user in users:
+    #         db.session.delete(user)
+    #     tokens = Token.query.filter(Token.user_id.in_([1,2])).all()
+    #     for token in tokens:
+    #         db.session.delete(token)
+    #     db.session.commit()
+    #     users_cnt = User.query.filter(User.id.in_([1,2])).count()
+    #     tokens_cnt = Token.query.filter(Token.user_id.in_([1,2])).count()
+    #     print("==========All tests end. Fixture clered====================")
 
     def test_fixture_is_ok(self):
         users = User.query.filter(User.id.in_([1,2])).all()
@@ -105,7 +109,6 @@ class authTest(unittest.TestCase):
         res = requests.post('http://localhost:5000/auth/refresh', json={'refresh_token': 'INVALID_REFRESH_TOKEN_TEST'})
         self.assertEqual(res.status_code, 404)
 
-    # TODO: User can use refresh token only once
     def test_user_can_use_refresh_token_only_once(self):
         payload = {}
         payload['refresh_token'] = 'REFRESH_TOKEN_TEST_ONCE'
@@ -125,7 +128,7 @@ class authTest(unittest.TestCase):
         res = requests.post('http://localhost:5000/auth/refresh', json=payload)
         self.assertEqual(res.status_code, 404)
 
-    def multiple_refresh_tokens_are_valid():
+    def multiple_refresh_tokens_are_valid(self):
         payload = {'login': 'testuser', 'passwd': 'testpasswd'}
         auth1 = requests.post('http://localhost:5000/auth/', json=payload)
         auth1 = auth1.json()
