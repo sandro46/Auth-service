@@ -44,7 +44,12 @@ const router = new Router({
       path: '/prod-section',
       name: 'prod_section',
       component: () => import(/* webpackChunkName: "about" */ './components/ProdSection.vue')
-    }
+    },
+    {
+      path: '/client',
+      name: 'client',
+      component: () => import(/* webpackChunkName: "about" */ './components/Client.vue')
+    },
   ]
 })
 

@@ -6,6 +6,7 @@ import prod_cat from './prodCat'
 import prod_component from './prodComponent'
 import prod_section from './prodSection'
 import office from './office'
+import client from './client'
 
 Vue.use(Vuex)
 
@@ -17,5 +18,6 @@ export default new Vuex.Store({
     prod_component,
     prod_section,
     office,
+    client,
   }
 })

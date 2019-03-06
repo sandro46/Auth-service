@@ -125,3 +125,17 @@ class Office(db.Model):
     """docstring for Office."""
     def __init__(self, *args, **kwargs):
         super(Office, self).__init__(*args, **kwargs)
+
+class Client(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    phone = db.Column(db.String(255))
+    address = db.Column(db.String(255))
+    discount = db.Column(db.Integer)
+    desc = db.Column(db.Text)
+    created = db.Column(db.DateTime, default=datetime.now()) #создание
+    __table_args__ = {"schema":"app"}
+
+    """docstring for Client."""
+    def __init__(self, *args, **kwargs):
+        super(Client, self).__init__(*args, **kwargs)
